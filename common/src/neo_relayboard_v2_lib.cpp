@@ -52,7 +52,7 @@ int neo_relayboardV2_node::init()
     std::cout << "                                                                     \n";
 
 	//Relayboard Config Parameter
-	if (n.hasParam("ComPort"))
+    if (n.hasParam("port"))
 	{
 		n.getParam("ComPort", m_sComPort);
 		ROS_INFO("Loaded ComPort parameter from parameter server: %s",m_sComPort.c_str());
@@ -65,38 +65,38 @@ int neo_relayboardV2_node::init()
 
     //Node Parameter
     n.param("message_timeout", m_dRelayBoard_timeout, 2.0);
-    n.param("requestRate", m_dRequestRate, 25.0);
+    n.param("request_rate", m_dRequestRate, 25.0);
 
     //Battery
-    n.getParam("Battery/serial_number", m_sBatterySerialNumber);
-    n.getParam("Battery/locaion", m_sBatteryLocation);
-    n.getParam("Battery/design_capacity", m_fBatteryDesignCapacity);
-    n.getParam("Battery/chemistry", m_iBatteryChemistry);
+    n.getParam("battery/serial_number", m_sBatterySerialNumber);
+    n.getParam("battery/locaion", m_sBatteryLocation);
+    n.getParam("battery/design_capacity", m_fBatteryDesignCapacity);
+    n.getParam("battery/chemistry", m_iBatteryChemistry);
 
     //Logging
     n.getParam("log", m_bLog);
 
     //IOBOard Parameter
-    n.param("IOBoard/active", m_bIOBoardActive, false);
+    n.param("ioboard/active", m_bIOBoardActive, false);
 
     //USBOard Parameter
-    n.param("USBoard/active", m_bUSBoardActive);
-    n.param("USBoard/sensor1_active", m_bUSBoardSensorActive[0], false);
-    n.param("USBoard/sensor2_active", m_bUSBoardSensorActive[1], false);
-    n.param("USBoard/sensor3_active", m_bUSBoardSensorActive[2], false);
-    n.param("USBoard/sensor4_active", m_bUSBoardSensorActive[3], false);
-    n.param("USBoard/sensor5_active", m_bUSBoardSensorActive[4], false);
-    n.param("USBoard/sensor6_active", m_bUSBoardSensorActive[5], false);
-    n.param("USBoard/sensor7_active", m_bUSBoardSensorActive[6], false);
-    n.param("USBoard/sensor8_active", m_bUSBoardSensorActive[7], false);
-    n.param("USBoard/sensor9_active", m_bUSBoardSensorActive[8], false);
-    n.param("USBoard/sensor10_active", m_bUSBoardSensorActive[9], false);
-    n.param("USBoard/sensor11_active", m_bUSBoardSensorActive[10], false);
-    n.param("USBoard/sensor12_active", m_bUSBoardSensorActive[11], false);
-    n.param("USBoard/sensor13_active", m_bUSBoardSensorActive[12], false);
-    n.param("USBoard/sensor14_active", m_bUSBoardSensorActive[13], false);
-    n.param("USBoard/sensor15_active", m_bUSBoardSensorActive[14], false);
-    n.param("USBoard/sensor16_active", m_bUSBoardSensorActive[15], false);
+    n.param("usboard/active", m_bUSBoardActive);
+    n.param("usboard/sensor1_active", m_bUSBoardSensorActive[0], false);
+    n.param("usboard/sensor2_active", m_bUSBoardSensorActive[1], false);
+    n.param("usboard/sensor3_active", m_bUSBoardSensorActive[2], false);
+    n.param("usboard/sensor4_active", m_bUSBoardSensorActive[3], false);
+    n.param("usboard/sensor5_active", m_bUSBoardSensorActive[4], false);
+    n.param("usboard/sensor6_active", m_bUSBoardSensorActive[5], false);
+    n.param("usboard/sensor7_active", m_bUSBoardSensorActive[6], false);
+    n.param("usboard/sensor8_active", m_bUSBoardSensorActive[7], false);
+    n.param("usboard/sensor9_active", m_bUSBoardSensorActive[8], false);
+    n.param("usboard/sensor10_active", m_bUSBoardSensorActive[9], false);
+    n.param("usboard/sensor11_active", m_bUSBoardSensorActive[10], false);
+    n.param("usboard/sensor12_active", m_bUSBoardSensorActive[11], false);
+    n.param("usboard/sensor13_active", m_bUSBoardSensorActive[12], false);
+    n.param("usboard/sensor14_active", m_bUSBoardSensorActive[13], false);
+    n.param("usboard/sensor15_active", m_bUSBoardSensorActive[14], false);
+    n.param("usboard/sensor16_active", m_bUSBoardSensorActive[15], false);
 
 	//Motor Parameter
 	//Drive2
@@ -294,48 +294,48 @@ int neo_relayboardV2_node::init()
 //----------------------------------------END OPEN COMPORT-----------------------------------------------------
 //----------------------------------------Init Publisher/Subscriber--------------------------------------------
 	//topics and subscriber which will allways get published
-	topicPub_isEmergencyStop = n.advertise<neo_msgs::EmergencyStopState>("/Emergency_Stop_State", 1);
-    topicPub_RelayBoardState = n.advertise<neo_msgs::RelayBoardV2>("/RelayBoardV2/State",1);
-    topicPub_BatteryState = n.advertise<sensor_msgs::BatteryState>("/RelayBoardV2/BatteryState",1);
+    topicPub_isEmergencyStop = n.advertise<neo_msgs::EmergencyStopState>("emergency_stop_state", 1);
+    topicPub_RelayBoardState = n.advertise<neo_msgs::RelayBoardV2>("relayboard_state",1);
+    topicPub_BatteryState = n.advertise<sensor_msgs::BatteryState>("battery_state",1);
 
-    srv_SetRelay = n.advertiseService("/RelayBoardV2/SetRelay", &neo_relayboardV2_node::serviceRelayBoardSetRelay, this);
-    srv_StartCharging = n.advertiseService("/RelayBoardV2/StartCharging", &neo_relayboardV2_node::serviceStartCharging, this);
-    srv_StopCharging = n.advertiseService("/RelayBoardV2/StopCharging", &neo_relayboardV2_node::serviceStopCharging, this);
-    srv_SetLCDMsg = n.advertiseService("/RelayBoardV2/SetLCDMsg", &neo_relayboardV2_node::serviceRelayBoardSetLCDMsg, this);
+    srv_SetRelay = n.advertiseService("set_relay", &neo_relayboardV2_node::serviceRelayBoardSetRelay, this);
+    srv_StartCharging = n.advertiseService("start_charging", &neo_relayboardV2_node::serviceStartCharging, this);
+    srv_StopCharging = n.advertiseService("stop_charging", &neo_relayboardV2_node::serviceStopCharging, this);
+    srv_SetLCDMsg = n.advertiseService("set_LCD_msg", &neo_relayboardV2_node::serviceRelayBoardSetLCDMsg, this);
 
 
 	if(m_iactive_motors != 0)
 	{
-		topicPub_drives = n.advertise<sensor_msgs::JointState>("/Drives/JointStates",1);
-		topicSub_drives = n.subscribe("/Drives/Set_Velocities",1,&neo_relayboardV2_node::getNewVelocitiesFomTopic, this);
+        topicPub_drives = n.advertise<sensor_msgs::JointState>("drives/joint_states",1);
+        topicSub_drives = n.subscribe("drives/joint_trajectory",1,&neo_relayboardV2_node::getNewVelocitiesFomTopic, this);
 	}
 
     if(m_bIOBoardActive)
 	{
-        topicPub_IOBoard = n.advertise<std_msgs::Int16>("/IOBoard/Data",1);
-        srv_SetDigOut = n.advertiseService("/IOBoard/SetDigOut", &neo_relayboardV2_node::serviceIOBoardSetDigOut, this);
+        topicPub_IOBoard = n.advertise<std_msgs::Int16>("ioboard/data",1);
+        srv_SetDigOut = n.advertiseService("ioboard/set_digital_output", &neo_relayboardV2_node::serviceIOBoardSetDigOut, this);
 
 	}
     if(m_bUSBoardActive)
 	{
-		topicPub_usBoard = n.advertise<neo_msgs::USBoard>("/USBoard/Measurements",1);
+        topicPub_usBoard = n.advertise<neo_msgs::USBoard>("usboard/measurements",1);
 
-		topicPub_USRangeSensor1 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor1",1);
-		topicPub_USRangeSensor2 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor2",1);
-		topicPub_USRangeSensor3 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor3",1);
-		topicPub_USRangeSensor4 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor4",1);
-		topicPub_USRangeSensor5 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor5",1);
-		topicPub_USRangeSensor6 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor6",1);
-		topicPub_USRangeSensor7 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor7",1);
-		topicPub_USRangeSensor8 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor8",1);
-		topicPub_USRangeSensor9 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor9",1);
-		topicPub_USRangeSensor10 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor10",1);
-		topicPub_USRangeSensor11 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor11",1);
-		topicPub_USRangeSensor12 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor12",1);
-		topicPub_USRangeSensor13 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor13",1);
-		topicPub_USRangeSensor14 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor14",1);
-		topicPub_USRangeSensor15 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor15",1);
-		topicPub_USRangeSensor16 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor16",1);
+        topicPub_USRangeSensor1 = n.advertise<sensor_msgs::Range>("usboard/sensor1",1);
+        topicPub_USRangeSensor2 = n.advertise<sensor_msgs::Range>("usboard/sensor2",1);
+        topicPub_USRangeSensor3 = n.advertise<sensor_msgs::Range>("usboard/sensor3",1);
+        topicPub_USRangeSensor4 = n.advertise<sensor_msgs::Range>("usboard/sensor4",1);
+        topicPub_USRangeSensor5 = n.advertise<sensor_msgs::Range>("usboard/sensor5",1);
+        topicPub_USRangeSensor6 = n.advertise<sensor_msgs::Range>("usboard/sensor6",1);
+        topicPub_USRangeSensor7 = n.advertise<sensor_msgs::Range>("usboard/sensor7",1);
+        topicPub_USRangeSensor8 = n.advertise<sensor_msgs::Range>("usboard/sensor8",1);
+        topicPub_USRangeSensor9 = n.advertise<sensor_msgs::Range>("usboard/sensor9",1);
+        topicPub_USRangeSensor10 = n.advertise<sensor_msgs::Range>("usboard/sensor10",1);
+        topicPub_USRangeSensor11 = n.advertise<sensor_msgs::Range>("usboard/sensor11",1);
+        topicPub_USRangeSensor12 = n.advertise<sensor_msgs::Range>("usboard/sensor12",1);
+        topicPub_USRangeSensor13 = n.advertise<sensor_msgs::Range>("usboard/sensor13",1);
+        topicPub_USRangeSensor14 = n.advertise<sensor_msgs::Range>("usboard/sensor14",1);
+        topicPub_USRangeSensor15 = n.advertise<sensor_msgs::Range>("usboard/sensor15",1);
+        topicPub_USRangeSensor16 = n.advertise<sensor_msgs::Range>("usboard/sensor16",1);
 	}
 
 	//logging
