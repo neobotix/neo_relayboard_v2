@@ -295,7 +295,7 @@ int neo_relayboardV2_node::init()
 //----------------------------------------Init Publisher/Subscriber--------------------------------------------
 	//topics and subscriber which will allways get published
     topicPub_isEmergencyStop = n.advertise<neo_msgs::EmergencyStopState>("emergency_stop_state", 1);
-    topicPub_RelayBoardState = n.advertise<neo_msgs::RelayBoardV2>("relayboard_state",1);
+    topicPub_RelayBoardState = n.advertise<neo_msgs::RelayBoardV2>("state",1);
     topicPub_BatteryState = n.advertise<sensor_msgs::BatteryState>("battery_state",1);
 
     srv_SetRelay = n.advertiseService("set_relay", &neo_relayboardV2_node::serviceRelayBoardSetRelay, this);
@@ -306,36 +306,36 @@ int neo_relayboardV2_node::init()
 
 	if(m_iactive_motors != 0)
 	{
-        topicPub_drives = n.advertise<sensor_msgs::JointState>("drives/joint_states",1);
-        topicSub_drives = n.subscribe("drives/joint_trajectory",1,&neo_relayboardV2_node::getNewVelocitiesFomTopic, this);
+        topicPub_drives = n.advertise<sensor_msgs::JointState>("/drives/joint_states",1);
+        topicSub_drives = n.subscribe("/drives/joint_trajectory",1,&neo_relayboardV2_node::getNewVelocitiesFomTopic, this);
 	}
 
     if(m_bIOBoardActive)
 	{
-        topicPub_IOBoard = n.advertise<std_msgs::Int16>("ioboard/data",1);
-        srv_SetDigOut = n.advertiseService("ioboard/set_digital_output", &neo_relayboardV2_node::serviceIOBoardSetDigOut, this);
+        topicPub_IOBoard = n.advertise<std_msgs::Int16>("/ioboard/data",1);
+        srv_SetDigOut = n.advertiseService("/ioboard/set_digital_output", &neo_relayboardV2_node::serviceIOBoardSetDigOut, this);
 
 	}
     if(m_bUSBoardActive)
 	{
-        topicPub_usBoard = n.advertise<neo_msgs::USBoard>("usboard/measurements",1);
+        topicPub_usBoard = n.advertise<neo_msgs::USBoard>("/usboard/measurements",1);
 
-        topicPub_USRangeSensor1 = n.advertise<sensor_msgs::Range>("usboard/sensor1",1);
-        topicPub_USRangeSensor2 = n.advertise<sensor_msgs::Range>("usboard/sensor2",1);
-        topicPub_USRangeSensor3 = n.advertise<sensor_msgs::Range>("usboard/sensor3",1);
-        topicPub_USRangeSensor4 = n.advertise<sensor_msgs::Range>("usboard/sensor4",1);
-        topicPub_USRangeSensor5 = n.advertise<sensor_msgs::Range>("usboard/sensor5",1);
-        topicPub_USRangeSensor6 = n.advertise<sensor_msgs::Range>("usboard/sensor6",1);
-        topicPub_USRangeSensor7 = n.advertise<sensor_msgs::Range>("usboard/sensor7",1);
-        topicPub_USRangeSensor8 = n.advertise<sensor_msgs::Range>("usboard/sensor8",1);
-        topicPub_USRangeSensor9 = n.advertise<sensor_msgs::Range>("usboard/sensor9",1);
-        topicPub_USRangeSensor10 = n.advertise<sensor_msgs::Range>("usboard/sensor10",1);
-        topicPub_USRangeSensor11 = n.advertise<sensor_msgs::Range>("usboard/sensor11",1);
-        topicPub_USRangeSensor12 = n.advertise<sensor_msgs::Range>("usboard/sensor12",1);
-        topicPub_USRangeSensor13 = n.advertise<sensor_msgs::Range>("usboard/sensor13",1);
-        topicPub_USRangeSensor14 = n.advertise<sensor_msgs::Range>("usboard/sensor14",1);
-        topicPub_USRangeSensor15 = n.advertise<sensor_msgs::Range>("usboard/sensor15",1);
-        topicPub_USRangeSensor16 = n.advertise<sensor_msgs::Range>("usboard/sensor16",1);
+        topicPub_USRangeSensor1 = n.advertise<sensor_msgs::Range>("/usboard/sensor1",1);
+        topicPub_USRangeSensor2 = n.advertise<sensor_msgs::Range>("/usboard/sensor2",1);
+        topicPub_USRangeSensor3 = n.advertise<sensor_msgs::Range>("/usboard/sensor3",1);
+        topicPub_USRangeSensor4 = n.advertise<sensor_msgs::Range>("/usboard/sensor4",1);
+        topicPub_USRangeSensor5 = n.advertise<sensor_msgs::Range>("/usboard/sensor5",1);
+        topicPub_USRangeSensor6 = n.advertise<sensor_msgs::Range>("/usboard/sensor6",1);
+        topicPub_USRangeSensor7 = n.advertise<sensor_msgs::Range>("/usboard/sensor7",1);
+        topicPub_USRangeSensor8 = n.advertise<sensor_msgs::Range>("/usboard/sensor8",1);
+        topicPub_USRangeSensor9 = n.advertise<sensor_msgs::Range>("/usboard/sensor9",1);
+        topicPub_USRangeSensor10 = n.advertise<sensor_msgs::Range>("/usboard/sensor10",1);
+        topicPub_USRangeSensor11 = n.advertise<sensor_msgs::Range>("/usboard/sensor11",1);
+        topicPub_USRangeSensor12 = n.advertise<sensor_msgs::Range>("/usboard/sensor12",1);
+        topicPub_USRangeSensor13 = n.advertise<sensor_msgs::Range>("/usboard/sensor13",1);
+        topicPub_USRangeSensor14 = n.advertise<sensor_msgs::Range>("/usboard/sensor14",1);
+        topicPub_USRangeSensor15 = n.advertise<sensor_msgs::Range>("/usboard/sensor15",1);
+        topicPub_USRangeSensor16 = n.advertise<sensor_msgs::Range>("/usboard/sensor16",1);
 	}
 
 	//logging
