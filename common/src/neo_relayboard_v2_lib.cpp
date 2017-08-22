@@ -54,7 +54,7 @@ int neo_relayboardV2_node::init()
 	//Relayboard Config Parameter
     if (n.hasParam("port"))
 	{
-		n.getParam("ComPort", m_sComPort);
+        n.getParam("port", m_sComPort);
 		ROS_INFO("Loaded ComPort parameter from parameter server: %s",m_sComPort.c_str());
 	}
     else
