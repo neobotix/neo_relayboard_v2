@@ -1173,6 +1173,10 @@ void RelayBoardV2::stopCharging()
 //-----------------------------------------------
 // IOBoard
 //-----------------------------------------------
+bool RelayBoardV2::getIOBoardAvailable()
+{
+    return m_IOBoard.bAvailable;
+}
 void RelayBoardV2::getIOBoardDigIn(int* DigIn)
 {
 	m_Mutex.lock();
@@ -1220,6 +1224,10 @@ void RelayBoardV2::getIOBoardAnalogIn(int* iAnalogIn)
 //---------------------------------------------------------------------------------------------------------------------
 // USBoard
 //---------------------------------------------------------------------------------------------------------------------
+bool RelayBoardV2::getUSBoardAvailable()
+{
+    return m_USBoard.bAvailable;
+}
 void RelayBoardV2::startUSBoard(int iChannelActive)
 {
 	m_Mutex.lock();

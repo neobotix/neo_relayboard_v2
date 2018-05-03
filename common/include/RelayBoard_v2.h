@@ -126,11 +126,13 @@ public:
     bool getMotorHomed(int imotor_nr);
 	
 	//USBoard
+        bool getUSBoardAvailable();
 	void getUSBoardData1To8(int* piUSDistMM);
 	void getUSBoardData9To16(int* piUSDistMM);
 	void getUSBoardAnalogIn(int* piAnalogIn);
 	
 	//IOBoard
+        bool getIOBoardAvailable();
 	void getIOBoardDigIn(int* DigIn);
     bool getIOBoardDigInState(int ID);
 	void getIOBoardDigOut(int* DigOut);

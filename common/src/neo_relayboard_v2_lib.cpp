@@ -288,8 +288,8 @@ int neo_relayboardV2_node::init()
         ROS_INFO("Drive %d: Active %s     Available %s",iMotorNr+2, m_Drives[iMotorNr].bmotor_active ? "true " : "false", m_Drives[iMotorNr].bmotor_avaliable ? "true" : "false");
         ROS_INFO("         Homing %s     Homed %s", m_Drives[iMotorNr].bhoming_active ? "true " : "false", m_Drives[iMotorNr].bmotor_homed ? "true" : "false");
     }
-    ROS_INFO("IOBoard: Active %s     Available %s",m_bIOBoardActive ? "true" : "false", false ? "true" : "false");
-    ROS_INFO("USBoard: Active %s     Available %s",m_bUSBoardActive ? "true" : "false", false ? "true" : "false");
+    ROS_INFO("IOBoard: Active %s     Available %s",m_bIOBoardActive ? "true" : "false", m_SerRelayBoard->getIOBoardAvailable() ? "true" : "false");
+    ROS_INFO("USBoard: Active %s     Available %s",m_bUSBoardActive ? "true" : "false", m_SerRelayBoard->getUSBoardAvailable() ? "true" : "false");
 
 //----------------------------------------END OPEN COMPORT-----------------------------------------------------
 //----------------------------------------Init Publisher/Subscriber--------------------------------------------
