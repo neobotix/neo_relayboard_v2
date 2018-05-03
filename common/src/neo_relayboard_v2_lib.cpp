@@ -312,7 +312,7 @@ int neo_relayboardV2_node::init()
 
     if(m_bIOBoardActive)
 	{
-        topicPub_IOBoard = n.advertise<std_msgs::Int16>("/ioboard/data",1);
+        topicPub_IOBoard = n.advertise<neo_msgs::IOBoard>("/ioboard/data",1);
         srv_SetDigOut = n.advertiseService("/ioboard/set_digital_output", &neo_relayboardV2_node::serviceIOBoardSetDigOut, this);
 
 	}
