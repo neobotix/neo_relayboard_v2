@@ -1225,11 +1225,27 @@ void neo_relayboardV2_node::PublishIOBoard()
     int iDigOutData = 0;
     m_SerRelayBoard->getIOBoardDigOut(&iDigOutData);
 
-    for(int iIOCnt = 0; iIOCnt < 16; iIOCnt++)
+    for(uint16_t iIOCnt = 0; iIOCnt < 16; iIOCnt++)
     {
         int iMask = 1 << iIOCnt;
-        msg_IOBoard.digital_inputs[iIOCnt] = (iDigInData & iMask);
-        msg_IOBoard.digital_outputs[iIOCnt] = (iDigOutData & iMask);
+
+        if((iDigInData & iMask) > 0)
+        {
+            msg_IOBoard.digital_inputs[iIOCnt] = true;
+        }
+        else
+        {
+            msg_IOBoard.digital_inputs[iIOCnt] = false;
+        }
+
+        if((iDigOutData & iMask) > 0)
+        {
+            msg_IOBoard.digital_outputs[iIOCnt] = true;
+        }
+        else
+        {
+            msg_IOBoard.digital_outputs[iIOCnt] = false;
+        }
     }
 
     int *pointer = 0;
