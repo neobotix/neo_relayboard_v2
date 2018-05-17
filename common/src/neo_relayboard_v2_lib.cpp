@@ -559,7 +559,7 @@ void neo_relayboardV2_node::PublishRelayBoardState()
             ROS_INFO("-----------SHUTDOWN Signal from RelayBoardV2----------");
             ros::shutdown();
             usleep(2000);
-            system("dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 \"org.freedesktop.login1.Manager.PowerOff\" boolean:true");
+            system("sudo halt -p");
         }
     }
 }
