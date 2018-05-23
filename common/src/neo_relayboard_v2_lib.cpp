@@ -533,10 +533,10 @@ void neo_relayboardV2_node::PublishRelayBoardState()
         float_t fcurrent = (float_t)iChargingCurrent/10;
         relayboardv2_msg.charging_current = fcurrent;       //[A]
 
-        relayboardv2_msg.relay_states[0] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_CHARGE);
+        relayboardv2_msg.relay_states[0] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_1);
         relayboardv2_msg.relay_states[1] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_1);
         relayboardv2_msg.relay_states[2] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_2);
-        relayboardv2_msg.relay_states[3] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_3);
+        relayboardv2_msg.relay_states[3] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_4);
 
 
         //keypad buttons have inverted logic

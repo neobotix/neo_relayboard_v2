@@ -832,31 +832,13 @@ bool RelayBoardV2::getRelayBoardDigOutState(int ID)
      * -> All states are the same as was has been set
      */
 
-    /* RELAY STATES BIT CODED:
-     * LSB : Info Taste gedrueckt
-     * Bit 2: Home Taste gedrueckt
-     * Bit 3: Start Taste gedrueckt
-     * Bit 4: Stop Taste gedrueckt
-     * Bit 5: Bremsen loesen Taste gedrueckt
-     * Bit 6: Reserviert
-     * Bit 7: Reserviert
-     * Bit 8: Reserviert
-     * Bit 9: Reserviert
-     * Bit 10: Reserviert
-     * Bit 11: Reserviert
-     * Bit 12: Reserviert
-     * Bit 13: Reserviert
-     * Bit 14: Reserviert
-     * Bit 15: Reserviert
-     * MSB: Reserviert
-     */
     int iRelayStates = 0;
     getRelayBoardDigOut(&iRelayStates);
 
     //Charge Relay
-    if(ID == RELAY_CHARGE)
+    if(ID == RELAY_ON_DEMAND_1)
     {
-        if((iRelayStates & 1))
+        if((iRelayStates & 8))
         {
             return true;
         }
@@ -866,9 +848,9 @@ bool RelayBoardV2::getRelayBoardDigOutState(int ID)
         }
     }
     //On Demand Relay 1
-    else if(ID == RELAY_ON_DEMAND_1)
+    else if(ID == RELAY_ON_DEMAND_2)
     {
-        if((iRelayStates & 2))
+        if((iRelayStates & 16))
         {
             return true;
         }
@@ -878,9 +860,9 @@ bool RelayBoardV2::getRelayBoardDigOutState(int ID)
         }
     }
     //On Demand Relay 2
-    else if(ID == RELAY_ON_DEMAND_2)
+    else if(ID == RELAY_ON_DEMAND_3)
     {
-        if((iRelayStates & 4))
+        if((iRelayStates & 32))
         {
             return true;
         }
@@ -890,9 +872,9 @@ bool RelayBoardV2::getRelayBoardDigOutState(int ID)
         }
     }
     //On Demand Relay 3
-    else if(ID == RELAY_ON_DEMAND_3)
+    else if(ID == RELAY_ON_DEMAND_4)
     {
-        if((iRelayStates & 8))
+        if((iRelayStates & 64))
         {
             return true;
         }
@@ -918,28 +900,28 @@ void RelayBoardV2::setRelayBoardDigOut(int iChannel, bool bOn)
     m_bRelayData = true;
 	switch( iChannel)
 	{
-	case 1:
+    case 0:
 
 		if(bOn) { m_S_MSG.iCmdRelayBoard |= 8; }
 		else { m_S_MSG.iCmdRelayBoard &= ~ 8; }
 		
 		break;
 
-	case 2:
+    case 1:
 
 		if(bOn) { m_S_MSG.iCmdRelayBoard |= 16; }
 		else { m_S_MSG.iCmdRelayBoard &= ~ 16; }
 
 		break;
 
-	case 3:
+    case 2:
 
 		if(bOn) { m_S_MSG.iCmdRelayBoard |= 32; }
 		else { m_S_MSG.iCmdRelayBoard &= ~ 32; }
 
 		break;
 
-	case 4:
+    case 3:
 
 		if(bOn) { m_S_MSG.iCmdRelayBoard |= 64; }
 		else { m_S_MSG.iCmdRelayBoard &= ~ 64; }

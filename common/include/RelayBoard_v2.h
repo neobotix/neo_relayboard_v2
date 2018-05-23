@@ -204,10 +204,10 @@ public:
     };
     enum Relays
     {
-        RELAY_CHARGE = 0,
-        RELAY_ON_DEMAND_1 = 1,
-        RELAY_ON_DEMAND_2 = 2,
-        RELAY_ON_DEMAND_3 = 3,
+        RELAY_ON_DEMAND_1 = 0,
+        RELAY_ON_DEMAND_2 = 1,
+        RELAY_ON_DEMAND_3 = 2,
+        RELAY_ON_DEMAND_4 = 3,
     };
 
 
