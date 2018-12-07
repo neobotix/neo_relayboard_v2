@@ -80,7 +80,7 @@ int neo_relayboardV2_node::init()
     n.param("ioboard/active", m_bIOBoardActive, false);
 
     //USBOard Parameter
-    n.param("usboard/active", m_bUSBoardActive);
+    n.param("usboard/active", m_bUSBoardActive, false);
     n.param("usboard/sensor1_active", m_bUSBoardSensorActive[0], false);
     n.param("usboard/sensor2_active", m_bUSBoardSensorActive[1], false);
     n.param("usboard/sensor3_active", m_bUSBoardSensorActive[2], false);
