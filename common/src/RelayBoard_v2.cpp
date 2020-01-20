@@ -43,6 +43,7 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/select.h>
 #include <linux/serial.h>
 
 #include <ros/ros.h>
@@ -111,6 +112,16 @@ RelayBoardClient::~RelayBoardClient()
 	}
 }
 
+bool RelayBoardClient::waitForRx(int timeout_sec)
+{
+	fd_set read_set;
+	FD_ZERO(&read_set);
+	FD_SET(fd, &read_set);
+
+	struct timeval timeout = {timeout_sec, 0};
+	return select(fd + 1, &read_set, 0, 0, &timeout) == 1;		// wait for input, with a timeout
+}
+
 int RelayBoardClient::evalRxBuffer()
 {
 	int msg_type = -1;
@@ -125,11 +136,17 @@ int RelayBoardClient::evalRxBuffer()
 		cHeader[2] = cHeader[1];
 		cHeader[1] = cHeader[0];
 
+		// wait up to 1 sec for input
+		if(!waitForRx(1))
+		{
+			return RX_TIMEOUT;
+		}
+
 		const int num_bytes_read = read(fd, cHeader, 1);
 
 		if (num_bytes_read < 1)
 		{
-			return RX_NO_HEADER;
+			return RX_NO_HEADER;	// error or shutdown
 		}
 
 		if ((cHeader[3] == 0x08) && (cHeader[2] == 0xFE) && (cHeader[1] == 0xEF) && (cHeader[0] == 0x08))
@@ -176,6 +193,12 @@ int RelayBoardClient::evalRxBuffer()
 
 		while (num_bytes_left > 0)
 		{
+			// wait up to 1 sec for input
+			if(!waitForRx(1))
+			{
+				return RX_TIMEOUT;
+			}
+
 			const int num_bytes_read = read(fd, cDat + offset, num_bytes_left);
 
 			if (num_bytes_read <= 0)
@@ -290,7 +313,7 @@ int RelayBoardClient::init(const char *cdevice_name, int iactive_motors, int iho
 	}
 
 	// open serial port
-	fd = open(cdevice_name, O_RDWR | O_NOCTTY);
+	fd = open(cdevice_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
 
 	if (fd < 0)
 	{

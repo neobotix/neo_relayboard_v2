@@ -63,6 +63,8 @@ public:
 	bool shutdownPltf();
 
 	//-------------------------------Msg Handling----------------------------------------------------------------------
+	bool waitForRx(int timeout_sec);
+
 	int evalRxBuffer();
 
 	int sendDataToRelayBoard();
