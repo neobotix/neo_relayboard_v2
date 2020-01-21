@@ -10,7 +10,6 @@
 #            device configuration              #
 ################################################
 port: /dev/ttyUSB0
-message_timeout: 3.0
 request_rate: 25
 
 #################################################

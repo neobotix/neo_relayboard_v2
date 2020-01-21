@@ -51,9 +51,7 @@ int main(int argc, char **argv)
 
 	// get parameters
 	double request_rate;   // [1/s]
-	double timeout_cycles; // [1]
 	node.n.param("request_rate", request_rate, 25.0);
-	node.n.param("message_timeout", timeout_cycles, 3.0);
 
 	// frequency of publishing states (cycle time)
 	ros::Rate rate(request_rate);
