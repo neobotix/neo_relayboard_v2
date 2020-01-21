@@ -375,13 +375,13 @@ void NeoRelayBoardNode::PublishRelayBoardState()
 		m_SerRelayBoard->getRelayBoardState(&iState);
 
 		relayboardv2_msg.relayboardv2_state.assign(false);		  // initialize all states with false
-		relayboardv2_msg.relayboardv2_state[0] = (iState & 1);	// no error
-		relayboardv2_msg.relayboardv2_state[1] = (iState & 1024); // charging relay error
-		relayboardv2_msg.relayboardv2_state[2] = (iState & 128);  // release brakes button failed
-		relayboardv2_msg.relayboardv2_state[3] = (iState & 8);	// motor error
-		relayboardv2_msg.relayboardv2_state[4] = (iState & 16);   // safety relay error
-		relayboardv2_msg.relayboardv2_state[5] = (iState & 32);   // Leistungsrelais error
-		relayboardv2_msg.relayboardv2_state[6] = (iState & 64);   // EMStop system error
+		relayboardv2_msg.relayboardv2_state[0] = (iState == 0);	  // no error
+		relayboardv2_msg.relayboardv2_state[1] = (iState & 512);  // charging relay error
+		relayboardv2_msg.relayboardv2_state[2] = (iState & 64);   // release brakes button failed
+		relayboardv2_msg.relayboardv2_state[3] = (iState & 4);	  // motor error
+		relayboardv2_msg.relayboardv2_state[4] = (iState & 8);    // safety relay error
+		relayboardv2_msg.relayboardv2_state[5] = (iState & 16);   // Leistungsrelais error
+		relayboardv2_msg.relayboardv2_state[6] = (iState & 32);   // EMStop system error
 
 		relayboardv2_msg.shutdown = (iState & 0x400); // relayboard is powering of in < 30s
 
