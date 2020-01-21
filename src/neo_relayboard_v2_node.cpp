@@ -35,28 +35,6 @@
 #include "../common/include/neo_relayboard_v2_node.h"
 #include "../common/include/WatchDog.h"
 
-class NodeWatchDog : public WatchDog
-{
-public:
-	NodeWatchDog(ros::Duration timeout_)
-		: WatchDog(timeout_)
-	{
-		topicPub_RelayBoardState = n.advertise<neo_msgs::RelayBoardV2>("state", 1);
-	}
-
-protected:
-	void handle_timeout() override
-	{
-		neo_msgs::RelayBoardV2 msg;
-		msg.communication_state = neo_msgs::RelayBoardV2::CS_LOST;
-
-		topicPub_RelayBoardState.publish(msg);
-	}
-
-private:
-	ros::NodeHandle n;
-	ros::Publisher topicPub_RelayBoardState;
-};
 
 //#######################
 //#### main programm ####
@@ -80,16 +58,9 @@ int main(int argc, char **argv)
 	// frequency of publishing states (cycle time)
 	ros::Rate rate(request_rate);
 
-	// setup watchdog with multiples of cycle time
-	NodeWatchDog watch_dog(ros::Duration(1 / request_rate * timeout_cycles));
-	watch_dog.start();
-
 	while (node.n.ok())
 	{
 		const ros::Time cycleStartTime = ros::Time::now();
-
-		// Notify watchdog
-		watch_dog.tickle();
 
 		// Communication
 		node.HandleCommunication();
@@ -118,8 +89,6 @@ int main(int argc, char **argv)
 
 		rate.sleep();
 	}
-
-	watch_dog.stop();
 
 	return 0;
 }
