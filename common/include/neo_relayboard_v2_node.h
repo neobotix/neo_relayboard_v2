@@ -186,6 +186,7 @@ private:
 
 	// ---- Msg Handling ------------
 	int m_iLastRXReturn = -1;
+	ros::Time m_tCurrentTimeStamp;
 
 	// log
 	bool m_bLog; //enables or disables the log for neo_relayboard

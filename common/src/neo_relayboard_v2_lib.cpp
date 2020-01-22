@@ -316,6 +316,9 @@ void NeoRelayBoardNode::HandleCommunication()
 		// try to receive current data from relayboard
 		const int iRXReturn = m_SerRelayBoard->evalRxBuffer();
 
+		// record current time stamp for latest message data
+		m_tCurrentTimeStamp = ros::Time::now();
+
 		// check if data was received
 		if (iRXReturn == m_iLastRXReturn)
 		{
@@ -359,6 +362,7 @@ void NeoRelayBoardNode::PublishRelayBoardState()
 	if (!m_bRelayBoardV2Available)
 	{
 		neo_msgs::RelayBoardV2 relayboardv2_msg;
+		relayboardv2_msg.header.stamp = ros::Time::now();
 
 		// important part for COM_CONFIG_FAILED
 		relayboardv2_msg.communication_state = m_iComState;
@@ -370,6 +374,7 @@ void NeoRelayBoardNode::PublishRelayBoardState()
 	{
 		// RelayBoardV2 is available
 		neo_msgs::RelayBoardV2 relayboardv2_msg;
+		relayboardv2_msg.header.stamp = m_tCurrentTimeStamp;
 
 		int iState = 0;
 		m_SerRelayBoard->getRelayBoardState(&iState);
@@ -438,6 +443,7 @@ void NeoRelayBoardNode::PublishBatteryState()
 		return;
 
 	sensor_msgs::BatteryState bstate_msg;
+	bstate_msg.header.stamp = m_tCurrentTimeStamp;
 
 	// get battery voltage from relayboardv2 msg
 	int iBatteryVoltage = 0;
@@ -469,7 +475,7 @@ void NeoRelayBoardNode::PublishBatteryState()
 	int iCurrent = 0;
 	m_SerRelayBoard->getChargingCurrent(&iCurrent);
 
-	bstate_msg.header.stamp = ros::Time::now();
+	bstate_msg.header.stamp = m_tCurrentTimeStamp;
 	bstate_msg.header.frame_id = "";
 
 	bstate_msg.voltage = iBatteryVoltage / 1000.f;							 // float32 Voltage in Volts (Mandatory)
@@ -496,7 +502,9 @@ void NeoRelayBoardNode::PublishEmergencyStopStates()
 
 	bool EM_signal;
 	ros::Duration duration_since_EM_confirmed;
+
 	neo_msgs::EmergencyStopState EM_msg;
+	EM_msg.header.stamp = m_tCurrentTimeStamp;
 
 	// assign input (laser, button) specific EM state
 	EM_msg.emergency_button_stop = m_SerRelayBoard->isEMStop();
@@ -625,7 +633,7 @@ void NeoRelayBoardNode::PublishJointStates()
 	static float sfLastPos[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 	sensor_msgs::JointState state;
-	state.header.stamp = ros::Time::now();
+	state.header.stamp = m_tCurrentTimeStamp;
 
 	// Publish Data for all possible Motors
 	state.name.resize(8);
@@ -692,6 +700,7 @@ void NeoRelayBoardNode::PublishUSBoardData()
 	m_SerRelayBoard->getUSBoardAnalogIn(usAnalog);
 
 	neo_msgs::USBoard usBoard;
+	usBoard.header.stamp = m_tCurrentTimeStamp;
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -713,7 +722,7 @@ void NeoRelayBoardNode::PublishUSBoardData()
 	for (int i = 0; i < 16; ++i)
 	{
 		std_msgs::Header header;
-		header.stamp = ros::Time::now();						   // time
+		header.stamp = m_tCurrentTimeStamp;						   // time
 		header.frame_id = "usrangesensor" + std::to_string(i + 1); // string
 
 		sensor_msgs::Range us_range_msg;
@@ -748,6 +757,8 @@ void NeoRelayBoardNode::PublishIOBoard()
 		return;
 
 	neo_msgs::IOBoard msg_IOBoard;
+	msg_IOBoard.header.stamp = m_tCurrentTimeStamp;
+
 	//bool[16] digital_inputs			# state for all digital inputs
 	//bool[16] digital_outputs          # state for all digital outputs
 	//uint8[4] analog_inputs			# analog input values
