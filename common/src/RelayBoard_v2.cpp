@@ -59,11 +59,11 @@ RelayBoardClient::RelayBoardClient()
 
 	m_iNumBytesRec = 0;
 
-	m_bRelayData = false;
+	m_bRelayData = true;		// always send relay data
 	m_bLCDData = false;
 	m_bIOBoardData = false;
 	m_bUSBoardData = false;
-	m_bSpeakerData = false;
+	m_bSpeakerData = true;		// always send speaker data
 	m_bChargeData = false;
 
 	m_REC_MSG.iRelayBoard_Status = 0;
@@ -838,8 +838,6 @@ void RelayBoardClient::getIOBoardDigOut(int *digOut)
 
 void RelayBoardClient::setIOBoardDigOut(int iChannel, bool bVal)
 {
-	m_bIOBoardData = true;
-
 	const int iMask = (1 << iChannel);
 
 	if (bVal)
@@ -871,13 +869,11 @@ bool RelayBoardClient::getUSBoardAvailable()
 
 void RelayBoardClient::startUSBoard(int iChannelActive)
 {
-	m_bUSBoardData = true;
 	m_S_MSG.USBoard_Cmd = iChannelActive;
 }
 
 void RelayBoardClient::stopUSBoard()
 {
-	m_bUSBoardData = true;
 	m_S_MSG.USBoard_Cmd = 0x00;
 }
 
@@ -1045,6 +1041,9 @@ int RelayBoardClient::convDataToSendMsg(unsigned char cMsg[])
 		}
 	}
 
+	m_bIOBoardData = getIOBoardAvailable();			// send data if hardware is available
+	m_bUSBoardData = getUSBoardAvailable();			// send data if hardware is available
+
 	// First Bit not in use yet
 	iDataAvailable = (bMotoData8 << 6) | (bMotoData4 << 5) | (m_bRelayData << 4) | (m_bLCDData << 3) | (m_bIOBoardData << 2) | (m_bUSBoardData << 1) | (m_bSpeakerData);
 
@@ -1166,11 +1165,7 @@ int RelayBoardClient::convDataToSendMsg(unsigned char cMsg[])
 	cMsg[iNumBytesSend + 1] = iChkSum;
 
 	// Reset data indicators
-	m_bRelayData = false;
 	m_bLCDData = false;
-	m_bIOBoardData = false;
-	m_bUSBoardData = false;
-	m_bSpeakerData = false;
 
 	return iNumBytesSend + 2;
 }
