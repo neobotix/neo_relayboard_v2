@@ -83,10 +83,6 @@ public:
 	// Motors
 	void setMotorDesiredEncS(int iMotorNr, long dVel);
 
-	// EM-Stop
-	void setEMStop();
-	void resetEMStop();
-
 	// LCD
 	void writeLCD(const std::string &sText);
 

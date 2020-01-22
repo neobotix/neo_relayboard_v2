@@ -584,18 +584,6 @@ bool RelayBoardClient::isEMStop()
 	return m_REC_MSG.iRelayBoard_Status & 0x01;
 }
 
-void RelayBoardClient::setEMStop()
-{
-	m_S_MSG.iSoftEM = 0x01;
-	ROS_ERROR("Software Emergency Stop ACTIVE");
-}
-
-void RelayBoardClient::resetEMStop()
-{
-	m_S_MSG.iSoftEM = 0x00;
-	ROS_ERROR("Software Emergency Stop INACTIVE");
-}
-
 bool RelayBoardClient::isScannerStop()
 {
 	return m_REC_MSG.iRelayBoard_Status & 0x02;
