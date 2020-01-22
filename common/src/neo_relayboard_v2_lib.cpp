@@ -625,6 +625,7 @@ void NeoRelayBoardNode::PublishJointStates()
 	static float sfLastPos[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 	sensor_msgs::JointState state;
+	state.header.stamp = ros::Time::now();
 
 	// Publish Data for all possible Motors
 	state.name.resize(8);
