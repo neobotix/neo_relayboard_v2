@@ -436,11 +436,13 @@ int RelayBoardClient::init(const char *cdevice_name, int iactive_motors, int iho
 	if (iext_hardware & 0x01) // IOBoard
 	{
 		ROS_DEBUG("Ext. Hardware: IOBoard");
+		m_IOBoard.bActive = true;
 		m_iNumBytesRec += 20;
 	}
 	if (iext_hardware & 0x02) // USBoard
 	{
 		ROS_DEBUG("Ext. Hardware: USBoard");
+		m_USBoard.bActive = true;
 		m_iNumBytesRec += 26;
 	}
 
