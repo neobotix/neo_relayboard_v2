@@ -409,8 +409,8 @@ void NeoRelayBoardNode::PublishRelayBoardState()
 		relayboardv2_msg.charging_current = iChargingCurrent / 10.f; // [A]
 
 		relayboardv2_msg.relay_states[0] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_1);
-		relayboardv2_msg.relay_states[1] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_1);
-		relayboardv2_msg.relay_states[2] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_2);
+		relayboardv2_msg.relay_states[1] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_2);
+		relayboardv2_msg.relay_states[2] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_3);
 		relayboardv2_msg.relay_states[3] = m_SerRelayBoard->getRelayBoardDigOutState(m_SerRelayBoard->RELAY_ON_DEMAND_4);
 
 		relayboardv2_msg.keypad[0] = m_SerRelayBoard->getKeyState(m_SerRelayBoard->KEY_INFO);
