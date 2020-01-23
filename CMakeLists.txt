@@ -37,13 +37,12 @@ catkin_package(
 include_directories(common/include ${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME} common/src/RelayBoardClient.cpp common/src/NeoRelayBoardNode.cpp)
-
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_gencpp)
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 
 add_executable(neo_relayboard_v2_node src/neo_relayboard_v2_node.cpp)
 target_link_libraries(neo_relayboard_v2_node ${PROJECT_NAME})
 target_link_libraries(neo_relayboard_v2_node ${catkin_LIBRARIES})
-add_dependencies(neo_relayboard_v2_node ${PROJECT_NAME}_gencpp)
+add_dependencies(neo_relayboard_v2_node ${catkin_EXPORTED_TARGETS})
 
 #############
 ## Install ##
