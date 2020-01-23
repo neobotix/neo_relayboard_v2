@@ -35,7 +35,7 @@
 #include <math.h>
 #include <ros/ros.h>
 
-#include "../include/neo_relayboard_v2_node.h"
+#include "../include/NeoRelayBoardNode.h"
 
 NeoRelayBoardNode::NeoRelayBoardNode()
 {

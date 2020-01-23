@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "../common/include/neo_relayboard_v2_node.h"
+#include "../common/include/NeoRelayBoardNode.h"
 #include "../common/include/WatchDog.h"
 
 

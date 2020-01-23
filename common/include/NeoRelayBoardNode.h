@@ -60,7 +60,7 @@
 #include <neo_srvs/RelayBoardSetRelay.h>
 #include <neo_srvs/RelayBoardSetLCDMsg.h>
 
-#include "RelayBoard_v2.h"
+#include "RelayBoardClient.h"
 
 
 //####################

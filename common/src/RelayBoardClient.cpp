@@ -48,7 +48,7 @@
 
 #include <ros/ros.h>
 
-#include "../include/RelayBoard_v2.h"
+#include "../include/RelayBoardClient.h"
 
 #define RS422_BAUDRATE 420000
 
