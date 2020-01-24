@@ -10,7 +10,7 @@
 #            device configuration              #
 ################################################
 port: /dev/ttyUSB0
-request_rate: 25
+request_rate: 50
 
 #################################################
 #                 battery                       #
