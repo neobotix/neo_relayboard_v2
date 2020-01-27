@@ -984,7 +984,7 @@ void RelayBoardClient::convRecMsgToData(unsigned char cMsg[])
 
 		for (int i = 0; i < 8; i++)
 		{
-			m_REC_MSG.iIOAnalog_In[i] = (cMsg[iCnt + 1] << 8) | cMsg[iCnt];
+			m_REC_MSG.iIOAnalog_In[i] = int16_t((cMsg[iCnt + 1] << 8) | cMsg[iCnt]);
 			iCnt += 2;
 		}
 
@@ -1001,7 +1001,7 @@ void RelayBoardClient::convRecMsgToData(unsigned char cMsg[])
 		}
 		for (int i = 0; i < 4; i++)
 		{
-			m_REC_MSG.iUSAnalog_In[i] = (cMsg[iCnt + 1] << 8) | cMsg[iCnt];
+			m_REC_MSG.iUSAnalog_In[i] = int16_t((cMsg[iCnt + 1] << 8) | cMsg[iCnt]);
 			iCnt += 2;
 		}
 
