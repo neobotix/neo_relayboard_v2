@@ -115,7 +115,7 @@ public:
 
 	// ---- Comm Handler ----
 	int init();
-	void HandleCommunication();
+	int HandleCommunication();
 
 	// ---- Topic Callbacks ----
 	void getNewVelocitiesFomTopic(const trajectory_msgs::JointTrajectory jt);

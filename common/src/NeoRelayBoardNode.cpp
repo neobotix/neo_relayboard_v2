@@ -218,7 +218,7 @@ int NeoRelayBoardNode::init()
 		m_Drives[0].dModulo, m_Drives[1].dModulo, m_Drives[2].dModulo, m_Drives[3].dModulo,
 		m_Drives[4].dModulo, m_Drives[5].dModulo, m_Drives[6].dModulo, m_Drives[7].dModulo);
 
-	if (ret == m_SerRelayBoard->INIT_CONFIG_OK)
+	if (ret == RelayBoardClient::INIT_CONFIG_OK)
 	{
 		m_bRelayBoardV2Available = true;
 		m_iComState = neo_msgs::RelayBoardV2::CS_OK;
@@ -227,25 +227,33 @@ int NeoRelayBoardNode::init()
 	{
 		ROS_ERROR("FAILED to open RelayboardV2 at ComPort %s", m_sComPort.c_str());
 		m_bRelayBoardV2Available = false;
-		m_iComState = neo_msgs::RelayBoardV2::CS_CONFIGURATION_FAILED;
 
-		if (ret == m_SerRelayBoard->INIT_OPEN_PORT_FAILED)
+		switch(ret) {
+			case RelayBoardClient::INIT_CONFIG_CHANGED:
+			case RelayBoardClient::INIT_CONFIG_FAILED:
+				m_iComState = neo_msgs::RelayBoardV2::CS_CONFIGURATION_FAILED;
+				break;
+			default:
+				m_iComState = neo_msgs::RelayBoardV2::CS_ERROR;
+		}
+
+		if (ret == RelayBoardClient::INIT_OPEN_PORT_FAILED)
 		{
 			ROS_ERROR("INIT_OPEN_PORT_FAILED");
 		}
-		else if (ret == m_SerRelayBoard->INIT_WRITE_FAILED)
+		else if (ret == RelayBoardClient::INIT_WRITE_FAILED)
 		{
 			ROS_ERROR("INIT_WRITE_FAILED");
 		}
-		else if (ret == m_SerRelayBoard->INIT_CONFIG_CHANGED)
+		else if (ret == RelayBoardClient::INIT_CONFIG_CHANGED)
 		{
 			ROS_ERROR("INIT_CONFIG_CHANGED");
 		}
-		else if (ret == m_SerRelayBoard->INIT_CONFIG_FAILED)
+		else if (ret == RelayBoardClient::INIT_CONFIG_FAILED)
 		{
 			ROS_ERROR("INIT_CONFIG_FAILED");
 		}
-		else if (ret == m_SerRelayBoard->INIT_UNKNOWN_ERROR)
+		else if (ret == RelayBoardClient::INIT_UNKNOWN_ERROR)
 		{
 			ROS_ERROR("INIT_UNKNOWN_ERROR");
 		}
@@ -301,11 +309,11 @@ int NeoRelayBoardNode::init()
 
 //--------------------------RelayBoardV2-----------------------------------------------------------------------
 
-void NeoRelayBoardNode::HandleCommunication()
+int NeoRelayBoardNode::HandleCommunication()
 {
 	// if relayboard is not available return
 	if (!m_bRelayBoardV2Available)
-		return;
+		return neo_msgs::RelayBoardV2::CS_NOT_ESTABLISHED;
 
 	// send current data to relayboard
 	const int iTXReturn = m_SerRelayBoard->sendDataToRelayBoard();
@@ -351,8 +359,11 @@ void NeoRelayBoardNode::HandleCommunication()
 	else
 	{
 		// sending failed
+		m_iComState = neo_msgs::RelayBoardV2::CS_ERROR;
 		ROS_ERROR("Failed to send data");
 	}
+
+	return m_iComState;
 }
 
 // -------Publisher------

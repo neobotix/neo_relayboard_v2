@@ -43,49 +43,63 @@ int main(int argc, char **argv)
 	// initialize ROS
 	ros::init(argc, argv, "neo_relayboard_v2_node");
 
-	NeoRelayBoardNode node;
+	// keep a node handle outside the loop to prevent auto-shutdown
+	ros::NodeHandle nh;
 
-	// initialize node
-	if (node.init() != 0)
-		return 1;
-
-	// get parameters
-	double request_rate;   // [1/s]
-	node.n.param("request_rate", request_rate, 25.0);
-
-	// frequency of publishing states (cycle time)
-	ros::Rate rate(request_rate);
-
-	while (node.n.ok())
+	while (ros::ok())
 	{
-		const ros::Time cycleStartTime = ros::Time::now();
+		NeoRelayBoardNode node;
 
-		// Communication
-		node.HandleCommunication();
+		// initialize node
+		if (node.init() != 0)
+			return 1;
 
-		// RelayBoard
-		node.PublishRelayBoardState();
-		node.PublishBatteryState();
-		node.PublishEmergencyStopStates();
+		// get parameters
+		double request_rate;   // [1/s]
+		node.n.param("request_rate", request_rate, 25.0);
 
-		// Motors
-		node.PublishJointStates();
+		// frequency of publishing states (cycle time)
+		ros::Rate rate(request_rate);
 
-		// IOBoard
-		node.PublishIOBoard();
+		while (nh.ok())
+		{
+			const ros::Time cycleStartTime = ros::Time::now();
 
-		// USBoard
-		node.PublishUSBoardData();
+			// Communication
+			const int comState = node.HandleCommunication();
 
-		ros::spinOnce();
+			// RelayBoard
+			node.PublishRelayBoardState();
+			node.PublishBatteryState();
+			node.PublishEmergencyStopStates();
 
-		const ros::Time cycleEndTime = ros::Time::now();
+			// Motors
+			node.PublishJointStates();
 
-		const ros::Duration cycleTime = cycleEndTime - cycleStartTime;
+			// IOBoard
+			node.PublishIOBoard();
 
-		//ROS_INFO("cycleTime: %f", cycleTime.toSec());
+			// USBoard
+			node.PublishUSBoardData();
 
-		rate.sleep();
+			ros::spinOnce();
+
+			const ros::Duration cycleTime = ros::Time::now() - cycleStartTime;
+
+			//ROS_INFO("cycleTime: %f", cycleTime.toSec());
+
+			if(comState != neo_msgs::RelayBoardV2::CS_OK)
+			{
+				if(ros::ok())
+				{
+					ROS_WARN("Communication error, restarting node ...");
+					ros::WallDuration(1).sleep();
+				}
+				break;
+			}
+
+			rate.sleep();
+		}
 	}
 
 	return 0;
