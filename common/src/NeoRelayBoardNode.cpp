@@ -313,7 +313,7 @@ int NeoRelayBoardNode::HandleCommunication()
 {
 	// if relayboard is not available return
 	if (!m_bRelayBoardV2Available)
-		return neo_msgs::RelayBoardV2::CS_NOT_ESTABLISHED;
+		return m_iComState;
 
 	// send current data to relayboard
 	const int iTXReturn = m_SerRelayBoard->sendDataToRelayBoard();

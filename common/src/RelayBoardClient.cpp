@@ -484,7 +484,7 @@ int RelayBoardClient::init(const char *cdevice_name, int iactive_motors, int iho
 		{
 			if (!checkConfig())
 			{
-				return INIT_CONFIG_CHANGED;
+				return INIT_CONFIG_FAILED;
 			}
 			ROS_DEBUG("Configured");
 			return INIT_CONFIG_OK;
