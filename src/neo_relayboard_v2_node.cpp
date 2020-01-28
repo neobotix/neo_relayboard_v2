@@ -88,8 +88,13 @@ int main(int argc, char **argv)
 
 			//ROS_INFO("cycleTime: %f", cycleTime.toSec());
 
-			if(comState != neo_msgs::RelayBoardV2::CS_OK)
+			// Check if to restart node in case of error
+			switch(comState)
 			{
+			case neo_msgs::RelayBoardV2::CS_OK:
+			case neo_msgs::RelayBoardV2::CS_CONFIGURATION_FAILED:
+				break;
+			default:
 				if(ros::ok())
 				{
 					ROS_WARN("Communication error, restarting node ...");
