@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <launch>
-	
+
 	<!-- upload parameters -->
-	<rosparam command="load" ns="neo_relayboard" file="$(find neo_relayboard_v2)/launch/neo_relayboard_v2.yaml"/>
-	
+	<rosparam command="load" ns="relayboard_v2" file="$(find neo_relayboard_v2)/launch/neo_relayboard_v2.yaml"/>
+
 	<!-- start relayboard node -->
-	<node pkg="neo_relayboard_v2" type="neo_relayboard_v2_node" ns="neo_relayboard" name="neo_relayboard_v2_node" respawn="false" output="screen"/>
+	<node pkg="neo_relayboard_v2" type="neo_relayboard_v2_node" ns="relayboard_v2" name="relayboard_v2_node" respawn="false" output="screen"/>
 
 
 </launch>

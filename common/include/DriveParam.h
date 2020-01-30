@@ -36,9 +36,7 @@
 #ifndef DRIVEPARAM_INCLUDEDEF_H
 #define DRIVEPARAM_INCLUDEDEF_H
 
-#include <StrUtil.h>
-
-//-----------------------------------------------
+#include "StrUtil.h"
 
 const double PI = 3.14159265358979323846;
 
@@ -67,27 +65,27 @@ public:
 	}
 
     std::string sName;
-    bool bmotor_active;		// if motor is active
+    bool bmotor_active;			// if motor is active
     bool bhoming_active;		// if homing is nessecary
-    bool bmotor_avaliable;   // if motor is available
-    bool bmotor_homed;       // if homing was succssesful
+    bool bmotor_avaliable;   	// if motor is available
+    bool bmotor_homed;       	// if homing was succssesful
 	int iEncIncrPerRevMot;		// encoder increments per revolution of motor shaft
 	double dVelMeasFrqHz;		// only used for Neo drive = 500, else = 1
-	double dGearRatio;		// gear ratio
-	double dBeltRatio;		// if drive has belt set ratio, else = 1
-	int iSign;			// direction of motion
+	double dGearRatio;			// gear ratio
+	double dBeltRatio;			// if drive has belt set ratio, else = 1
+	int iSign;					// direction of motion
 	double dVelMaxEncIncrS;		// max. veloctiy [encoder increments / s]
 	double dVelPModeEncIncrS;	// velocity in position mode e. g. if amplifier generates trajectory
-	double dAccIncrS2;		// max. acceleration [encoder increments / S^2]
-	double dDecIncrS2;		// max. deceleration [encoder increments / S^2]
-	double dModulo;			// Modulo for ELMO encoder
-    double dRadToIncr; 		// factor for conversion
+	double dAccIncrS2;			// max. acceleration [encoder increments / S^2]
+	double dDecIncrS2;			// max. deceleration [encoder increments / S^2]
+	double dModulo;				// Modulo for ELMO encoder
+    double dRadToIncr; 			// factor for conversion
 
 
 	void calcRadToIncr()
 	{
 		dRadToIncr = (iEncIncrPerRevMot * dGearRatio * dBeltRatio) / (2. * PI);
-	}	
+	}
 
 	/**
 	 * Converts position and velocity.
@@ -107,30 +105,24 @@ public:
 	{
 		return (dPosWheelRad * dRadToIncr);
 	}
-	
+
 	/// Conversions of encoder increments to wheel angle in radians.
 	double convIncrToRad(int iPosIncr)
 	{
 		return ((double)iPosIncr / dRadToIncr);
 	}
-	
+
 	/// Conversions of gear velocity in rad/s to encoder increments per measurement period.
 	double convRadSToIncrPerPeriod(double dVelWheelRadS)
 	{
 		return ( (dVelWheelRadS * dRadToIncr) / dVelMeasFrqHz );
 	}
-	
+
 	/// Conversions of encoder increments per measurment period to gear velocity in rad/s.
 	double convIncrPerPeriodToRadS(int iVelMotIncrPeriod)
 	{
 		return ( (double)iVelMotIncrPeriod / dRadToIncr * dVelMeasFrqHz );
 	}
-
-private:
-
-	//
-
-
 
 };
 

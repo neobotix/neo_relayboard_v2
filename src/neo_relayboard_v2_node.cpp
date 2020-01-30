@@ -32,53 +32,85 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include <../include/neo_relayboard_v2_node.h>
+#include "../common/include/NeoRelayBoardNode.h"
+#include "../common/include/WatchDog.h"
+
 
 //#######################
 //#### main programm ####
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	// initialize ROS, spezify name of node
+	// initialize ROS
 	ros::init(argc, argv, "neo_relayboard_v2_node");
-	neo_relayboardV2_node node;
-	if(node.init() != 0) return 1;
-	double requestRate = node.getRequestRate();
-	ros::Rate r(requestRate); //Cycle-Rate: Frequency of publishing States
-    ros::Time cycleStartTime;
-    ros::Time cycleEndTime;
-    ros::Duration cycleTime;
-	while(node.n.ok())
+
+	// keep a node handle outside the loop to prevent auto-shutdown
+	ros::NodeHandle nh;
+
+	while (ros::ok())
 	{
-        cycleStartTime = ros::Time::now();
+		NeoRelayBoardNode node;
 
-        //Communication
-		node.HandleCommunication();
+		// initialize node
+		if (node.init() != 0)
+			return 1;
 
-		//RelayBoard
-		node.PublishRelayBoardState();
-        node.PublishBatteryState();
-		node.PublishEmergencyStopStates();
+		// get parameters
+		double request_rate;   // [1/s]
+		node.n.param("request_rate", request_rate, 25.0);
 
-		//Motors
-		node.PublishJointStates();
+		// frequency of publishing states (cycle time)
+		ros::Rate rate(request_rate);
 
-		//IOBoard
-        node.PublishIOBoard();
+		while (nh.ok())
+		{
+			const ros::Time cycleStartTime = ros::Time::now();
 
-		//USBoard
-		node.PublishUSBoardData();
+			// Communication
+			const int comState = node.HandleCommunication();
 
-		ros::spinOnce();
+			// RelayBoard
+			node.PublishRelayBoardState();
+			node.PublishBatteryState();
+			node.PublishEmergencyStopStates();
 
-        cycleEndTime = ros::Time::now();
+			// Motors
+			node.PublishJointStates();
 
-        cycleTime = cycleEndTime - cycleStartTime;
+			// IOBoard
+			node.PublishIOBoard();
 
-        //ROS_INFO("cycleTime: %f", cycleTime.toSec());
+			// USBoard
+			node.PublishUSBoardData();
 
-		r.sleep();
+			ros::spinOnce();
+
+			const ros::Duration cycleTime = ros::Time::now() - cycleStartTime;
+
+			//ROS_INFO("cycleTime: %f", cycleTime.toSec());
+
+			// Check if to restart node in case of error
+			bool restart = false;
+			switch(comState)
+			{
+			case neo_msgs::RelayBoardV2::CS_OK:
+			case neo_msgs::RelayBoardV2::CS_CONFIGURATION_FAILED:
+				break;
+			default:
+				if(ros::ok())
+				{
+					ROS_WARN("Communication error, restarting node ...");
+					ros::WallDuration(1).sleep();
+				}
+				restart = true;
+			}
+
+			if(restart) {
+				break;
+			}
+
+			rate.sleep();
+		}
 	}
 
 	return 0;
 }
-
