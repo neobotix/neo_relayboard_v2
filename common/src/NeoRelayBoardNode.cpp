@@ -128,6 +128,8 @@ int NeoRelayBoardNode::init()
 		m_Drives[i].calcRadToIncr();
 	}
 
+	n.param("motor_delay", m_tMotorDelay, 0.025);
+
 	// Check which motors are active
 	if (m_Drives[0].bmotor_active)
 	{
@@ -644,7 +646,7 @@ void NeoRelayBoardNode::PublishJointStates()
 	static float sfLastPos[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 	sensor_msgs::JointState state;
-	state.header.stamp = m_tCurrentTimeStamp;
+	state.header.stamp = m_tCurrentTimeStamp - ros::Duration(m_tMotorDelay);
 
 	// Publish Data for all possible Motors
 	state.name.resize(8);
