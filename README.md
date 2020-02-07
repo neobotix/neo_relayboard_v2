@@ -8,4 +8,5 @@ The RelayBoardV2 is used in all Neobotix mobile robots: (http://www.neobotix-rob
 * The RelayBoard is not available as standalone unit.
 
 ## Parameters and Usage
-### More details coming soon!
+
+See https://docs.neobotix.de/display/ROSPKGS/neo_relayboard_v2
