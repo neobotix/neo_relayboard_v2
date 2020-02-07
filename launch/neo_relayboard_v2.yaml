@@ -26,7 +26,7 @@ request_rate: 50
 
 battery:
   serial_number: neobattery1
-  locaion: slot1
+  location: slot1
   design_capacity: 100
   chemistry: 1
 

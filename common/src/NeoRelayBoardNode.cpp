@@ -77,7 +77,7 @@ int NeoRelayBoardNode::init()
 
 	// Battery
 	n.getParam("battery/serial_number", m_sBatterySerialNumber);
-	n.getParam("battery/locaion", m_sBatteryLocation);
+	n.getParam("battery/location", m_sBatteryLocation);
 	n.getParam("battery/design_capacity", m_fBatteryDesignCapacity);
 	n.getParam("battery/chemistry", m_iBatteryChemistry);
 
