@@ -128,7 +128,7 @@ int NeoRelayBoardNode::init()
 		m_Drives[i].calcRadToIncr();
 	}
 
-	n.param("motor_delay", m_tMotorDelay, 0.025);
+	n.param("motor_delay", m_tMotorDelay, 0.0);
 
 	// Check which motors are active
 	if (m_Drives[0].bmotor_active)
