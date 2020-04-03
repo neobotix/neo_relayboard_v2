@@ -129,6 +129,7 @@ int NeoRelayBoardNode::init()
 	}
 
 	n.param("motor_delay", m_tMotorDelay, 0.0);
+	n.param("trajectory_timeout", m_trajectory_timeout, 0.1);
 
 	// Check which motors are active
 	if (m_Drives[0].bmotor_active)
@@ -316,6 +317,26 @@ int NeoRelayBoardNode::HandleCommunication()
 	// if relayboard is not available return
 	if (!m_bRelayBoardV2Available)
 		return m_iComState;
+
+	const ros::Time now = ros::Time::now();
+
+	// check for input timeout
+	if ((now - m_last_trajectory_time).toSec() > m_trajectory_timeout)
+	{
+		if (!is_trajectory_timeout && !m_last_trajectory_time.isZero()) {
+			ROS_WARN_STREAM("joint_trajectory input timeout! Stopping now.");
+		}
+		is_trajectory_timeout = true;
+	}
+	else {
+		is_trajectory_timeout = false;
+	}
+
+	if (is_trajectory_timeout) {
+		for (int i = 0; i < m_imotor_count; i++) {
+			m_SerRelayBoard->setMotorDesiredEncS(i, 0);		// set velocities to zero
+		}
+	}
 
 	// send current data to relayboard
 	const int iTXReturn = m_SerRelayBoard->sendDataToRelayBoard();
@@ -695,6 +716,8 @@ void NeoRelayBoardNode::getNewVelocitiesFomTopic(const trajectory_msgs::JointTra
 		// send Data to MSG Handler
 		m_SerRelayBoard->setMotorDesiredEncS(i, dvelocity);
 	}
+
+	m_last_trajectory_time = ros::Time::now();
 }
 
 //-----------------------------USBoard-------------------------------------------------------------------------

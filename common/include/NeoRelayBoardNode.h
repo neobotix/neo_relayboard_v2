@@ -187,7 +187,10 @@ private:
 	// ---- Msg Handling ------------
 	int m_iLastRXReturn = -1;
 	ros::Time m_tCurrentTimeStamp;
+	ros::Time m_last_trajectory_time;
 	double m_tMotorDelay = 0;
+	double m_trajectory_timeout = 0;
+	bool is_trajectory_timeout = false;
 
 	// log
 	bool m_bLog; //enables or disables the log for neo_relayboard
