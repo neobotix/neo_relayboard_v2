@@ -303,7 +303,9 @@ int NeoRelayBoardNode::init()
 
 		for (int i = 0; i < 16; ++i)
 		{
-			topicPub_USRangeSensor[i] = n.advertise<sensor_msgs::Range>("/usboard/sensor" + std::to_string(i + 1), 1);
+			if(m_bUSBoardSensorActive[i]) {
+				topicPub_USRangeSensor[i] = n.advertise<sensor_msgs::Range>("/usboard/sensor" + std::to_string(i + 1), 1);
+			}
 		}
 	}
 
@@ -757,9 +759,12 @@ void NeoRelayBoardNode::PublishUSBoardData()
 	// Additionally publish data in ROS sensor_msgs::Range format
 	for (int i = 0; i < 16; ++i)
 	{
+		if(!m_bUSBoardSensorActive[i]) {
+			continue;
+		}
 		std_msgs::Header header;
 		header.stamp = m_tCurrentTimeStamp;						   // time
-		header.frame_id = "usrangesensor" + std::to_string(i + 1); // string
+		header.frame_id = "us_" + std::to_string(i + 1) + "_link"; 	// string
 
 		sensor_msgs::Range us_range_msg;
 		us_range_msg.header = header;
