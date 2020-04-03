@@ -129,7 +129,7 @@ int NeoRelayBoardNode::init()
 	}
 
 	n.param("motor_delay", m_tMotorDelay, 0.0);
-	n.param("trajectory_timeout", m_trajectory_timeout, 0.1);
+	n.param("trajectory_timeout", m_trajectory_timeout, 0.5);
 
 	// Check which motors are active
 	if (m_Drives[0].bmotor_active)
