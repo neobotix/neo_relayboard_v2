@@ -193,6 +193,6 @@ private:
 	bool is_trajectory_timeout = false;
 
 	// log
-	bool m_bLog; //enables or disables the log for neo_relayboard
+	bool m_bLog = false;	// enables or disables the log for neo_relayboard
 
 };

@@ -945,8 +945,6 @@ void RelayBoardClient::convRecMsgToData(unsigned char cMsg[])
 {
 	int iCnt = 0;
 
-	// TODO: check signed/unsigned for all inputs
-
 	// Has Data
 	iCnt++;
 
