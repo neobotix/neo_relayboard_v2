@@ -112,17 +112,17 @@ RelayBoardClient::~RelayBoardClient()
 	}
 }
 
-bool RelayBoardClient::waitForRx(int timeout_sec)
+bool RelayBoardClient::waitForRx(uint64_t timeout_usec)
 {
 	fd_set read_set;
 	FD_ZERO(&read_set);
 	FD_SET(fd, &read_set);
 
-	struct timeval timeout = {timeout_sec, 0};
+	struct timeval timeout = {timeout_usec / 1000000, timeout_usec % 1000000};
 	return select(fd + 1, &read_set, 0, 0, &timeout) == 1;		// wait for input, with a timeout
 }
 
-int RelayBoardClient::evalRxBuffer()
+int RelayBoardClient::evalRxBuffer(uint64_t timeout_usec)
 {
 	int msg_type = -1;
 
@@ -136,8 +136,7 @@ int RelayBoardClient::evalRxBuffer()
 		cHeader[2] = cHeader[1];
 		cHeader[1] = cHeader[0];
 
-		// wait up to 1 sec for input
-		if(!waitForRx(1))
+		if(!waitForRx(timeout_usec))
 		{
 			return RX_TIMEOUT;
 		}
@@ -193,8 +192,7 @@ int RelayBoardClient::evalRxBuffer()
 
 		while (num_bytes_left > 0)
 		{
-			// wait up to 1 sec for input
-			if(!waitForRx(1))
+			if(!waitForRx(timeout_usec))
 			{
 				return RX_TIMEOUT;
 			}

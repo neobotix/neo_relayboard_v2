@@ -63,9 +63,9 @@ public:
 	bool shutdownPltf();
 
 	//-------------------------------Msg Handling----------------------------------------------------------------------
-	bool waitForRx(int timeout_sec);
+	bool waitForRx(uint64_t timeout_usec);
 
-	int evalRxBuffer();
+	int evalRxBuffer(uint64_t timeout_usec = 100 * 1000);
 
 	int sendDataToRelayBoard();
 
