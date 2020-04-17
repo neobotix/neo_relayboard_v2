@@ -118,7 +118,7 @@ bool RelayBoardClient::waitForRx(uint64_t timeout_usec)
 	FD_ZERO(&read_set);
 	FD_SET(fd, &read_set);
 
-	struct timeval timeout = {timeout_usec / 1000000, timeout_usec % 1000000};
+	struct timeval timeout = {int32_t(timeout_usec / 1000000), int32_t(timeout_usec % 1000000)};
 	return select(fd + 1, &read_set, 0, 0, &timeout) == 1;		// wait for input, with a timeout
 }
 
