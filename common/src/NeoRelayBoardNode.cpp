@@ -380,7 +380,7 @@ int NeoRelayBoardNode::HandleCommunication()
 		else
 		{
 			// Unknown error
-			ROS_ERROR("Unknown error");
+			ROS_ERROR_STREAM("Unknown error: " << iRXReturn);
 		}
 
 		m_iLastRXReturn = iRXReturn;
