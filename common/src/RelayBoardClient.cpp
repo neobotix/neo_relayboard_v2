@@ -201,6 +201,9 @@ int RelayBoardClient::evalRxBuffer(uint64_t timeout_usec)
 
 			if (num_bytes_read <= 0)
 			{
+				if(ros::ok()) {
+					ROS_ERROR_STREAM("read() failed with: " << std::strerror(errno));
+				}
 				return RX_UNKNOWN_ERROR;
 			}
 
