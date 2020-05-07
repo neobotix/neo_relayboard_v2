@@ -209,6 +209,14 @@ int RelayBoardClient::evalRxBuffer(uint64_t timeout_usec)
 
 			offset += num_bytes_read;
 			num_bytes_left -= num_bytes_read;
+
+			// discard any leftover data, to make sure we don't accumulate
+			while(waitForRx(0)) {
+				char dummy[1] = {};
+				if(read(fd, dummy, 1) != 1) {
+					break;
+				}
+			}
 		}
 	}
 
