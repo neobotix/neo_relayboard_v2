@@ -373,6 +373,10 @@ int NeoRelayBoardNode::HandleCommunication()
 		{
 			ROS_ERROR("No valid message header found");
 		}
+		else if (iRXReturn == RelayBoardClient::RX_ERROR_MSG)
+		{
+			ROS_ERROR("RelayBoard error");
+		}
 		else
 		{
 			// Unknown error

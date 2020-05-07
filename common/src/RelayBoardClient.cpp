@@ -296,6 +296,7 @@ int RelayBoardClient::evalRxBuffer(uint64_t timeout_usec)
 	else if (msg_type == 3)
 	{
 		// Error Msg
+		ROS_ERROR_STREAM("RX_ERROR_MSG: error code = '" << char(cDat[0]) << "'");
 		return RX_ERROR_MSG;
 	}
 
