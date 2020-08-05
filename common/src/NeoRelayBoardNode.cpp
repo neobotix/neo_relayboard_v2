@@ -280,6 +280,8 @@ int NeoRelayBoardNode::init()
 	topicPub_RelayBoardState = n.advertise<neo_msgs::RelayBoardV2>("state", 1);
 	topicPub_BatteryState = n.advertise<sensor_msgs::BatteryState>("battery_state", 1);
 
+	srv_SetEMStop = n.advertiseService("set_EMstop", &NeoRelayBoardNode::serviceRelayBoardSetEmStop, this);
+	srv_UnSetEMStop = n.advertiseService("unset_EMstop", &NeoRelayBoardNode::serviceRelayBoardUnSetEmStop, this);
 	srv_SetRelay = n.advertiseService("set_relay", &NeoRelayBoardNode::serviceRelayBoardSetRelay, this);
 	srv_StartCharging = n.advertiseService("start_charging", &NeoRelayBoardNode::serviceStartCharging, this);
 	srv_StopCharging = n.advertiseService("stop_charging", &NeoRelayBoardNode::serviceStopCharging, this);
@@ -602,6 +604,50 @@ void NeoRelayBoardNode::PublishEmergencyStopStates()
 //#############################################
 //       RelayBoardV2 Service Callbacks
 //#############################################
+
+bool NeoRelayBoardNode::serviceRelayBoardSetEmStop(neo_srvs::RelayBoardSetEMStop::Request &req, neo_srvs::RelayBoardSetEMStop::Response &res)
+{
+	bool EM_signal;
+	neo_msgs::EmergencyStopState EM_msg;
+
+	EM_msg.emergency_button_stop = m_SerRelayBoard->isEMStop();
+	EM_msg.scanner_stop = m_SerRelayBoard->isScannerStop();
+
+	EM_signal = (EM_msg.emergency_button_stop || EM_msg.scanner_stop);
+	if (EM_signal)
+	{
+		ROS_INFO("Already in EMStop");
+		return false;
+	}
+	else
+	{
+		ROS_INFO("Enabled EMStop");
+		return true;
+	}
+
+}
+
+bool NeoRelayBoardNode::serviceRelayBoardUnSetEmStop(neo_srvs::RelayBoardUnSetEMStop::Request &req, neo_srvs::RelayBoardUnSetEMStop::Response &res)
+{
+	bool EM_signal;
+	neo_msgs::EmergencyStopState EM_msg;
+
+	EM_msg.emergency_button_stop = m_SerRelayBoard->isEMStop();
+	EM_msg.scanner_stop = m_SerRelayBoard->isScannerStop();
+
+	EM_signal = (EM_msg.emergency_button_stop || EM_msg.scanner_stop);
+	if (!EM_signal)
+	{
+		ROS_INFO("Already not in EMStop");
+		return false;
+	}
+	else
+	{
+		ROS_INFO("Released EMStop");
+		return true;
+	}
+
+}
 
 bool NeoRelayBoardNode::serviceRelayBoardSetRelay(neo_srvs::RelayBoardSetRelay::Request &req,
 												  neo_srvs::RelayBoardSetRelay::Response &res)
