@@ -598,7 +598,7 @@ bool RelayBoardClient::isEMStop()
 
 bool RelayBoardClient::isSoftEMStop()
 {
-	return m_S_MSG.iSoftEM;
+	return m_S_MSG.iSoftEM == 1;
 }
 
 bool RelayBoardClient::isScannerStop()
