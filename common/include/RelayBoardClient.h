@@ -93,9 +93,14 @@ public:
 	// IOBoard
 	void setIOBoardDigOut(int iChannel, bool bVal);
 
+	// EM-Stop
+	void setSoftEMStop();
+	void unsetSoftEMStop();
+
 	//------------------------------Get Data for Topics----------------------------------------------------------------
 	// EM-Stop
 	bool isEMStop();
+	bool isSoftEMStop();
 	bool isScannerStop();
 
 	// RelayBoard Data

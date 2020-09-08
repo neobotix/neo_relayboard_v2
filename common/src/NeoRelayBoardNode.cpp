@@ -607,46 +607,30 @@ void NeoRelayBoardNode::PublishEmergencyStopStates()
 
 bool NeoRelayBoardNode::serviceRelayBoardSetEmStop(neo_srvs::RelayBoardSetEMStop::Request &req, neo_srvs::RelayBoardSetEMStop::Response &res)
 {
-	bool EM_signal;
-	neo_msgs::EmergencyStopState EM_msg;
-
-	EM_msg.emergency_button_stop = m_SerRelayBoard->isEMStop();
-	EM_msg.scanner_stop = m_SerRelayBoard->isScannerStop();
-
-	EM_signal = (EM_msg.emergency_button_stop || EM_msg.scanner_stop);
-	if (EM_signal)
+	if (m_SerRelayBoard->isSoftEMStop())
 	{
-		ROS_INFO("Already in EMStop");
-		return false;
+		ROS_INFO("Already in SoftEMStop");
 	}
 	else
 	{
-		ROS_INFO("Enabled EMStop");
-		return true;
+		m_SerRelayBoard->setSoftEMStop();
+		ROS_INFO("Enabled SoftEMStop");
 	}
-
+	return true;
 }
 
 bool NeoRelayBoardNode::serviceRelayBoardUnSetEmStop(neo_srvs::RelayBoardUnSetEMStop::Request &req, neo_srvs::RelayBoardUnSetEMStop::Response &res)
 {
-	bool EM_signal;
-	neo_msgs::EmergencyStopState EM_msg;
-
-	EM_msg.emergency_button_stop = m_SerRelayBoard->isEMStop();
-	EM_msg.scanner_stop = m_SerRelayBoard->isScannerStop();
-
-	EM_signal = (EM_msg.emergency_button_stop || EM_msg.scanner_stop);
-	if (!EM_signal)
+	if (!m_SerRelayBoard->isSoftEMStop())
 	{
-		ROS_INFO("Already not in EMStop");
-		return false;
+		ROS_INFO("Already not in SoftEMStop");
 	}
 	else
 	{
-		ROS_INFO("Released EMStop");
-		return true;
+		m_SerRelayBoard->unsetSoftEMStop();
+		ROS_INFO("Released SoftEMStop");
 	}
-
+	return true;
 }
 
 bool NeoRelayBoardNode::serviceRelayBoardSetRelay(neo_srvs::RelayBoardSetRelay::Request &req,
