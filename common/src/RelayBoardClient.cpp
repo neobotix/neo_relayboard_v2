@@ -596,6 +596,11 @@ bool RelayBoardClient::isEMStop()
 	return m_REC_MSG.iRelayBoard_Status & 0x01;
 }
 
+bool RelayBoardClient::isSoftEMStop()
+{
+	return m_S_MSG.iSoftEM;
+}
+
 bool RelayBoardClient::isScannerStop()
 {
 	return m_REC_MSG.iRelayBoard_Status & 0x02;
@@ -860,6 +865,16 @@ void RelayBoardClient::setIOBoardDigOut(int iChannel, bool bVal)
 	{
 		m_S_MSG.IOBoard_Cmd &= ~iMask;
 	}
+}
+
+void RelayBoardClient::setSoftEMStop()
+{
+	m_S_MSG.iSoftEM = 1;
+}
+
+void RelayBoardClient::unsetSoftEMStop()
+{
+	m_S_MSG.iSoftEM = 2;
 }
 
 void RelayBoardClient::getIOBoardAnalogIn(int *iAnalogIn)

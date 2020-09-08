@@ -59,6 +59,8 @@
 #include <neo_srvs/IOBoardSetDigOut.h>
 #include <neo_srvs/RelayBoardSetRelay.h>
 #include <neo_srvs/RelayBoardSetLCDMsg.h>
+#include <neo_srvs/RelayBoardSetEMStop.h>
+#include <neo_srvs/RelayBoardUnSetEMStop.h>
 
 #include "RelayBoardClient.h"
 
@@ -91,6 +93,8 @@ public:
 
 	ros::ServiceServer srv_SetRelay;
 	ros::ServiceServer srv_SetLCDMsg;
+	ros::ServiceServer srv_SetEMStop;
+	ros::ServiceServer srv_UnSetEMStop;
 
 	// Drives:
 	ros::Publisher topicPub_drives;
@@ -133,6 +137,8 @@ public:
 	void PublishIOBoard();
 
 	// ---- Service Callbacks ----
+	bool serviceRelayBoardSetEmStop(neo_srvs::RelayBoardSetEMStop::Request &req, neo_srvs::RelayBoardSetEMStop::Response &res);
+	bool serviceRelayBoardUnSetEmStop(neo_srvs::RelayBoardUnSetEMStop::Request &req, neo_srvs::RelayBoardUnSetEMStop::Response &res);
 	bool serviceRelayBoardSetRelay(neo_srvs::RelayBoardSetRelay::Request &req, neo_srvs::RelayBoardSetRelay::Response &res);
 	bool serviceRelayBoardSetLCDMsg(neo_srvs::RelayBoardSetLCDMsg::Request &req, neo_srvs::RelayBoardSetLCDMsg::Response &res);
 	bool serviceStartCharging(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);

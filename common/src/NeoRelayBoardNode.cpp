@@ -280,6 +280,8 @@ int NeoRelayBoardNode::init()
 	topicPub_RelayBoardState = n.advertise<neo_msgs::RelayBoardV2>("state", 1);
 	topicPub_BatteryState = n.advertise<sensor_msgs::BatteryState>("battery_state", 1);
 
+	srv_SetEMStop = n.advertiseService("set_EMstop", &NeoRelayBoardNode::serviceRelayBoardSetEmStop, this);
+	srv_UnSetEMStop = n.advertiseService("unset_EMstop", &NeoRelayBoardNode::serviceRelayBoardUnSetEmStop, this);
 	srv_SetRelay = n.advertiseService("set_relay", &NeoRelayBoardNode::serviceRelayBoardSetRelay, this);
 	srv_StartCharging = n.advertiseService("start_charging", &NeoRelayBoardNode::serviceStartCharging, this);
 	srv_StopCharging = n.advertiseService("stop_charging", &NeoRelayBoardNode::serviceStopCharging, this);
@@ -602,6 +604,34 @@ void NeoRelayBoardNode::PublishEmergencyStopStates()
 //#############################################
 //       RelayBoardV2 Service Callbacks
 //#############################################
+
+bool NeoRelayBoardNode::serviceRelayBoardSetEmStop(neo_srvs::RelayBoardSetEMStop::Request &req, neo_srvs::RelayBoardSetEMStop::Response &res)
+{
+	if (m_SerRelayBoard->isSoftEMStop())
+	{
+		ROS_INFO("Already in SoftEMStop");
+	}
+	else
+	{
+		m_SerRelayBoard->setSoftEMStop();
+		ROS_INFO("Enabled SoftEMStop");
+	}
+	return true;
+}
+
+bool NeoRelayBoardNode::serviceRelayBoardUnSetEmStop(neo_srvs::RelayBoardUnSetEMStop::Request &req, neo_srvs::RelayBoardUnSetEMStop::Response &res)
+{
+	if (!m_SerRelayBoard->isSoftEMStop())
+	{
+		ROS_INFO("Already not in SoftEMStop");
+	}
+	else
+	{
+		m_SerRelayBoard->unsetSoftEMStop();
+		ROS_INFO("Released SoftEMStop");
+	}
+	return true;
+}
 
 bool NeoRelayBoardNode::serviceRelayBoardSetRelay(neo_srvs::RelayBoardSetRelay::Request &req,
 												  neo_srvs::RelayBoardSetRelay::Response &res)
