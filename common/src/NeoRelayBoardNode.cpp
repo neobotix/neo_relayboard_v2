@@ -615,6 +615,7 @@ bool NeoRelayBoardNode::serviceRelayBoardSetEmStop(neo_srvs::RelayBoardSetEMStop
 	{
 		m_SerRelayBoard->setSoftEMStop();
 		ROS_INFO("Enabled SoftEMStop");
+		res.success = true;
 	}
 	return true;
 }
@@ -629,6 +630,7 @@ bool NeoRelayBoardNode::serviceRelayBoardUnSetEmStop(neo_srvs::RelayBoardUnSetEM
 	{
 		m_SerRelayBoard->unsetSoftEMStop();
 		ROS_INFO("Released SoftEMStop");
+		res.success = true;
 	}
 	return true;
 }
