@@ -489,7 +489,23 @@ void NeoRelayBoardNode::PublishBatteryState()
 
 	// get battery voltage from relayboardv2 msg
 	int iBatteryVoltage = 0;
+	float fBatteryVoltage = 0.0;
+	float fBatteryPercentage = 0;
 	m_SerRelayBoard->getBattVoltage(&iBatteryVoltage);
+	fBatteryVoltage = iBatteryVoltage / 1000.f;
+
+	if(fBatteryVoltage > 36) {
+		const float vmin = 44.0;
+		const float vmax = 49.5;
+		fBatteryPercentage = fmin(fmax((fBatteryVoltage - vmin) / (vmax - vmin), 0), 1);
+	} else if(fBatteryVoltage > 18) {
+		const float vmin = 22.5;
+		const float vmax = 25.0;
+		fBatteryPercentage = fmin(fmax((fBatteryVoltage - vmin) / (vmax - vmin), 0), 1);
+	} else if(fBatteryVoltage >= 0 && fBatteryVoltage <= 1.001) {
+		fBatteryPercentage = fBatteryVoltage;
+		fBatteryVoltage = 48;
+	}
 
 	// get charging state from relayboardv2 msg
 	int iChargingState = 0;
@@ -520,12 +536,12 @@ void NeoRelayBoardNode::PublishBatteryState()
 	bstate_msg.header.stamp = m_tCurrentTimeStamp;
 	bstate_msg.header.frame_id = "";
 
-	bstate_msg.voltage = iBatteryVoltage / 1000.f;							 // float32 Voltage in Volts (Mandatory)
+	bstate_msg.voltage = fBatteryVoltage;							 // float32 Voltage in Volts (Mandatory)
 	bstate_msg.current = iCurrent / 10.f;									 // float32 Negative when discharging (A)  (If unmeasured NaN)
 	bstate_msg.charge = NAN;												 // float32 Current charge in Ah  (If unmeasured NaN)
 	bstate_msg.capacity = NAN;												 // float32 Capacity in Ah (last full capacity)  (If unmeasured NaN)
 	bstate_msg.design_capacity = m_fBatteryDesignCapacity;					 // float32 Capacity in Ah (design capacity)  (If unmeasured NaN)
-	bstate_msg.percentage = NAN;											 // float32 Charge percentage on 0 to 1 range  (If unmeasured NaN)
+	bstate_msg.percentage = fBatteryPercentage;								 // float32 Charge percentage on 0 to 1 range  (If unmeasured NaN)
 	bstate_msg.power_supply_health = bstate_msg.POWER_SUPPLY_HEALTH_UNKNOWN; // uint8   The battery health metric.
 	bstate_msg.power_supply_technology = m_iBatteryChemistry;				 // uint8   The battery chemistry.
 	bstate_msg.present = true;												 // bool    True if the battery is present
