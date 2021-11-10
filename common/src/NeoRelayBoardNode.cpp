@@ -551,6 +551,17 @@ void NeoRelayBoardNode::PublishBatteryState()
 	bstate_msg.serial_number = m_sBatterySerialNumber.c_str(); // The best approximation of the battery serial number
 
 	topicPub_BatteryState.publish(bstate_msg);
+
+	// Charging Switch
+	if(m_enable_charging){
+		if(iChargingState == m_SerRelayBoard->CHS_FINISHED)  {
+			if(bstate_msg.percentage > 0.9){
+				m_SerRelayBoard->stopCharging();
+			} else {
+				m_SerRelayBoard->startCharging();
+			}
+		}
+	}
 }
 
 void NeoRelayBoardNode::PublishEmergencyStopStates()
@@ -678,6 +689,7 @@ bool NeoRelayBoardNode::serviceStartCharging(std_srvs::Empty::Request &req, std_
 	if (m_bRelayBoardV2Available)
 	{
 		m_SerRelayBoard->startCharging();
+		m_enable_charging = true;
 		return true;
 	}
 	return false;
@@ -688,6 +700,7 @@ bool NeoRelayBoardNode::serviceStopCharging(std_srvs::Empty::Request &req, std_s
 	if (m_bRelayBoardV2Available)
 	{
 		m_SerRelayBoard->stopCharging();
+		m_enable_charging = false;
 		return true;
 	}
 	return false;
