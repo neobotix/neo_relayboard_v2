@@ -197,6 +197,7 @@ private:
 	double m_tMotorDelay = 0;
 	double m_trajectory_timeout = 0;
 	bool is_trajectory_timeout = false;
+	bool m_enable_charging = false;
 
 	// log
 	bool m_bLog = false;	// enables or disables the log for neo_relayboard
