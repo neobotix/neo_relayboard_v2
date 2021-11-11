@@ -199,6 +199,8 @@ private:
 	double m_trajectory_timeout = 0;
 	bool is_trajectory_timeout = false;
 	bool m_enable_charging = false;
+	float m_fLastVoltage = 0;
+	float m_fLastCurrent = 0;
 
 	// log
 	bool m_bLog = false;	// enables or disables the log for neo_relayboard

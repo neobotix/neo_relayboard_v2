@@ -494,6 +494,10 @@ void NeoRelayBoardNode::PublishBatteryState()
 	m_SerRelayBoard->getBattVoltage(&iBatteryVoltage);
 	fBatteryVoltage = iBatteryVoltage / 1000.f;
 
+	// Battery Volatage low pass filtering
+	fBatteryVoltage = fBatteryVoltage * 0.1 + m_fLastVoltage * (1 - 0.1);
+	m_fLastVoltage = fBatteryVoltage;
+	
 	if(fBatteryVoltage > 36) {
 		const float vmin = 44.0;
 		const float vmax = 49.5;
@@ -531,13 +535,20 @@ void NeoRelayBoardNode::PublishBatteryState()
 
 	// get charging current from relayboardv2 msg
 	int iCurrent = 0;
+	float fCurrent = 0.0;
 	m_SerRelayBoard->getChargingCurrent(&iCurrent);
+	fCurrent = iCurrent / 10.f;
+
+	// Battery Current low pass filtering
+	// Filter value is hardcoded - ToDo
+	fCurrent = fCurrent * 0.1 + m_fLastCurrent * (1 - 0.1);
+	m_fLastCurrent = fCurrent;
 
 	bstate_msg.header.stamp = m_tCurrentTimeStamp;
 	bstate_msg.header.frame_id = "";
 
-	bstate_msg.voltage = fBatteryVoltage;							 // float32 Voltage in Volts (Mandatory)
-	bstate_msg.current = iCurrent / 10.f;									 // float32 Negative when discharging (A)  (If unmeasured NaN)
+	bstate_msg.voltage = fBatteryVoltage;									 // float32 Voltage in Volts (Mandatory)
+	bstate_msg.current = fCurrent;											 // float32 Negative when discharging (A)  (If unmeasured NaN)
 	bstate_msg.charge = NAN;												 // float32 Current charge in Ah  (If unmeasured NaN)
 	bstate_msg.capacity = NAN;												 // float32 Capacity in Ah (last full capacity)  (If unmeasured NaN)
 	bstate_msg.design_capacity = m_fBatteryDesignCapacity;					 // float32 Capacity in Ah (design capacity)  (If unmeasured NaN)
