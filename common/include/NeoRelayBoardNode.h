@@ -194,6 +194,7 @@ private:
 	int m_iLastRXReturn = -1;
 	ros::Time m_tCurrentTimeStamp;
 	ros::Time m_last_trajectory_time;
+	ros::Time m_charge_start_time;
 	double m_tMotorDelay = 0;
 	double m_trajectory_timeout = 0;
 	bool is_trajectory_timeout = false;

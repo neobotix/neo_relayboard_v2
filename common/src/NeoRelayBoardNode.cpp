@@ -552,7 +552,8 @@ void NeoRelayBoardNode::PublishBatteryState()
 
 	topicPub_BatteryState.publish(bstate_msg);
 	// Charging Switch
-	if(m_enable_charging){
+	if(m_enable_charging and (ros::Time::now() - m_charge_start_time).toSec() > 30.0){
+		m_charge_start_time = ros::Time::now();
 		if(iChargingState == m_SerRelayBoard->CHS_FINISHED)  {
 			int iIsChargeEnabled = 0;
 			m_SerRelayBoard->getRelayBoardDigOut(&iIsChargeEnabled);
@@ -691,6 +692,7 @@ bool NeoRelayBoardNode::serviceStartCharging(std_srvs::Empty::Request &req, std_
 	if (m_bRelayBoardV2Available)
 	{
 		m_SerRelayBoard->startCharging();
+		m_charge_start_time = ros::Time::now();
 		m_enable_charging = true;
 		return true;
 	}
