@@ -563,18 +563,25 @@ void NeoRelayBoardNode::PublishBatteryState()
 
 	topicPub_BatteryState.publish(bstate_msg);
 	// Charging Switch
-	if(m_enable_charging and (ros::Time::now() - m_charge_start_time).toSec() > 30.0){
+	if(m_enable_charging and (ros::Time::now() - m_charge_start_time).toSec() > 30.0 
+		and iChargingState == m_SerRelayBoard->CHS_FINISHED){
 		m_charge_start_time = ros::Time::now();
-		if(iChargingState == m_SerRelayBoard->CHS_FINISHED)  {
-			int iIsChargeEnabled = 0;
-			m_SerRelayBoard->getRelayBoardDigOut(&iIsChargeEnabled);
-			if((iIsChargeEnabled & 1) && bstate_msg.percentage > 0.9){
-				m_SerRelayBoard->stopCharging();
-			} 
-			if(!(iIsChargeEnabled & 1) && bstate_msg.percentage < 0.9){
-				m_SerRelayBoard->startCharging();
-			}
+		int iIsChargeEnabled = 0;
+		m_SerRelayBoard->getRelayBoardDigOut(&iIsChargeEnabled);
+		if((iIsChargeEnabled & 1) && bstate_msg.percentage > 0.9){
+			m_SerRelayBoard->stopCharging();
+		} 
+		if(!(iIsChargeEnabled & 1) && bstate_msg.percentage < 0.9){
+			m_SerRelayBoard->startCharging();
 		}
+	}
+
+	if(m_enable_charging and (iChargingState == m_SerRelayBoard->CHS_NO_CHARGER or  
+		iChargingState == m_SerRelayBoard->CHS_ABORT) and 
+		(ros::Time::now() - m_charge_start_time).toSec() > 900.0 ) {
+		ROS_INFO_STREAM("Trying to restart charging");
+		m_charge_start_time = ros::Time::now();
+		m_SerRelayBoard->startCharging();
 	}
 }
 
