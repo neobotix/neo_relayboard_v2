@@ -311,6 +311,8 @@ int NeoRelayBoardNode::init()
 		}
 	}
 
+	n.createTimer(ros::Duration(1), &NeoRelayBoardNode::print_info, this);
+
 	return 0;
 }
 
@@ -583,6 +585,7 @@ void NeoRelayBoardNode::PublishBatteryState()
 		m_charge_start_time = ros::Time::now();
 		m_SerRelayBoard->startCharging();
 	}
+	last_bstate_msg = bstate_msg;
 }
 
 void NeoRelayBoardNode::PublishEmergencyStopStates()
@@ -937,3 +940,12 @@ bool NeoRelayBoardNode::serviceIOBoardSetDigOut(neo_srvs::IOBoardSetDigOut::Requ
 }
 
 //-----------------------------END IOBoard---------------------------------------------------------------------
+
+void NeoRelayBoardNode::print_info(const ros::TimerEvent&)
+{
+	if(m_enable_charging) {
+		ROS_INFO_STREAM("Charging: current = " << last_bstate_msg.current
+				<< " A, voltage = " << last_bstate_msg.voltage
+				<< " V, percentage = " << 100 * last_bstate_msg.percentage << " %");
+	}
+}

@@ -145,6 +145,9 @@ public:
 	bool serviceStopCharging(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
 	bool serviceIOBoardSetDigOut(neo_srvs::IOBoardSetDigOut::Request &req, neo_srvs::IOBoardSetDigOut::Response &res);
 
+	// --- Timer Callbacks ---
+	void print_info(const ros::TimerEvent&);
+
 private:
 	// ---- Communication --------
 	int m_iComState = neo_msgs::RelayBoardV2::CS_NOT_ESTABLISHED;
@@ -163,6 +166,8 @@ private:
 	std::string m_sBatteryLocation = "Slot999";
 	int m_iBatteryChemistry = 1;
 	float m_fBatteryDesignCapacity = 100.f;
+
+	sensor_msgs::BatteryState last_bstate_msg;
 
 	// ---- IOBoard ------------
 	bool m_bIOBoardActive = false;
