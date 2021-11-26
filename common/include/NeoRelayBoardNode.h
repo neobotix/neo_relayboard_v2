@@ -210,4 +210,6 @@ private:
 	// log
 	bool m_bLog = false;	// enables or disables the log for neo_relayboard
 
+	ros::Timer m_info_timer;
+
 };

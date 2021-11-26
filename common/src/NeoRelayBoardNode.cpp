@@ -311,7 +311,7 @@ int NeoRelayBoardNode::init()
 		}
 	}
 
-	n.createTimer(ros::Duration(1), &NeoRelayBoardNode::print_info, this);
+	m_info_timer = n.createTimer(ros::Duration(1), &NeoRelayBoardNode::print_info, this);
 
 	return 0;
 }
