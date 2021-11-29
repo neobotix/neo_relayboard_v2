@@ -944,7 +944,10 @@ bool NeoRelayBoardNode::serviceIOBoardSetDigOut(neo_srvs::IOBoardSetDigOut::Requ
 void NeoRelayBoardNode::print_info(const ros::TimerEvent&)
 {
 	if(m_enable_charging) {
-		ROS_INFO_STREAM("Charging: current = " << last_bstate_msg.current
+		int iChargingState = 0;
+		m_SerRelayBoard->getChargingState(&iChargingState);
+		ROS_INFO_STREAM("Charging: state = " << iChargingState
+				<< ", current = " << last_bstate_msg.current
 				<< " A, voltage = " << last_bstate_msg.voltage
 				<< " V, percentage = " << 100 * last_bstate_msg.percentage << " %");
 	}
